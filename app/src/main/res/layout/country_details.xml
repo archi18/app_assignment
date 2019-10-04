@@ -1,6 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/country_detail"
+    tools:context=".ItemDetailFragment">
 
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="395dp"
+        android:layout_height="715dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <TextView
+            android:id="@+id/cap_txt"
+            android:layout_width="141dp"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="18dp"
+            android:text="Capital" />
+
+        <TextView
+            android:id="@+id/area_txt"
+            android:layout_width="142dp"
+            android:layout_height="31dp"
+            android:layout_below="@+id/cap_txt"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:text="Area" />
+
+        <TextView
+            android:id="@+id/pop_txt"
+            android:layout_width="142dp"
+            android:layout_height="33dp"
+            android:layout_below="@+id/area_txt"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="11dp"
+            android:text="Population" />
+
+        <TextView
+            android:id="@+id/reg_txt"
+            android:layout_width="142dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/pop_txt"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="10dp"
+            android:text="Region" />
+
+        <TextView
+            android:id="@+id/subreg_txt"
+            android:layout_width="143dp"
+            android:layout_height="35dp"
+            android:layout_below="@id/reg_txt"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="11dp"
+            android:layout_marginTop="11dp"
+            android:text="Subregion" />
+
+        <TextView
+            android:id="@+id/cap_txt_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="124dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@+id/cap_txt" />
+
+        <TextView
+            android:id="@+id/area_txt_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cap_txt_val"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="120dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="16dp"
+            android:layout_toEndOf="@+id/area_txt" />
+
+        <TextView
+            android:id="@+id/pop_txt_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/area_txt_val"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="122dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="17dp"
+            android:layout_toEndOf="@+id/pop_txt" />
+
+        <TextView
+            android:id="@+id/reg_txt_val"
+            android:layout_width="103dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pop_txt_val"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="124dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@+id/reg_txt" />
+
+        <TextView
+            android:id="@+id/subreg_txt_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/reg_txt_val"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="125dp"
+            android:layout_marginTop="26dp"
+            android:layout_marginEnd="17dp"
+            android:layout_toEndOf="@+id/subreg_txt" />
+
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
