@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.moto.adsouza.countryapp.content.ContentManager;
 import com.moto.adsouza.countryapp.dummy.DummyContent;
 import com.moto.adsouza.countryapp.worker.LoadCountryDetailsTask;
@@ -74,6 +76,14 @@ public class ItemDetailFragment extends Fragment {
         if (appBarLayout != null) {
             appBarLayout.setTitle(mItem.getName());
         }
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Updating info", Snackbar.LENGTH_LONG).show();
+                loadCountryInfo();
+            }
+        });
     }
 
     private void startHandler() {
@@ -135,15 +145,18 @@ public class ItemDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mCountryDetailsView = inflater.inflate(R.layout.country_details, container, false);
-
-        LoadCountryDetailsTask task = new LoadCountryDetailsTask(mItem, mHandler);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        loadCountryInfo();
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
             //((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
         }
 
         return mCountryDetailsView;
+    }
+
+    private void loadCountryInfo() {
+        LoadCountryDetailsTask task = new LoadCountryDetailsTask(mItem, mHandler);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public enum Status {SUCCESS, FAIL}
