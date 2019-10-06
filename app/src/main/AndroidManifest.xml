@@ -28,6 +28,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.moto.adsouza.countryapp.ItemListActivity" />
         </activity>
+
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".ItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.moto.adsouza.countryapp.ItemListActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -52,8 +52,9 @@ public class ItemListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Context context = view.getContext();
+                Intent intent = new Intent(context, ProfileActivity.class);
+                context.startActivity(intent);
             }
         });
 
@@ -77,7 +78,7 @@ public class ItemListActivity extends AppCompatActivity {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final ItemListActivity mParentActivity;
+        private final AppCompatActivity mParentActivity;
         private final List<ContentManager.Country> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -102,7 +103,7 @@ public class ItemListActivity extends AppCompatActivity {
             }
         };
 
-        SimpleItemRecyclerViewAdapter(ItemListActivity parent,
+        SimpleItemRecyclerViewAdapter(AppCompatActivity parent,
                                       List<ContentManager.Country> items,
                                       boolean twoPane) {
             mValues = items;
