@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.moto.adsouza.countryapp.content.ContentManager;
-import com.moto.adsouza.countryapp.dummy.DummyContent;
 import com.moto.adsouza.countryapp.worker.LoadCountryDetailsTask;
 
 /**

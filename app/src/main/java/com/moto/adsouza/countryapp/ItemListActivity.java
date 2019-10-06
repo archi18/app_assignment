@@ -10,16 +10,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moto.adsouza.countryapp.content.ContentManager;
-import com.moto.adsouza.countryapp.dummy.DummyContent;
 
 import java.util.List;
 
@@ -94,11 +92,15 @@ public class ItemListActivity extends AppCompatActivity {
                             .replace(R.id.item_detail_container, fragment)
                             .commit();
                 } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, ItemDetailActivity.class);
-                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.getId());
-
-                    context.startActivity(intent);
+                    if(Util.isNetworkConnectionAvailable(mParentActivity)) {
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, ItemDetailActivity.class);
+                        intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.getId());
+                        context.startActivity(intent);
+                    } else {
+                        Toast.makeText(mParentActivity, R.string.network_unavailable,
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         };

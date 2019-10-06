@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">countryapp</string>
-    <string name="title_item_detail">Item Detail</string>
+    <string name="country_list">Country List</string>
+    <string name="personal_detail">Personal Detail</string>
+    <string name="network_unavailable">No Internet connection.</string>
+    <string name="profile_name">Archi Dsouza</string>
+    <string name="profile_titile">Multimedia Software Engineer at Motorola Mobility</string>
+    <string name="cur_loc">Chicago, USA</string>
+    <string name="email">archidsouza18@gmail.com</string>
+    <string name="phonenumber">+1(312) 877-6454</string>
+    <string name="profile">Profile</string>
+    <string name="education_title">Education</string>
+    <string name="experience_title">Experience</string>
 </resources>
