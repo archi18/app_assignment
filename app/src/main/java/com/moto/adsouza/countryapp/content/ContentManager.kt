@@ -10,6 +10,7 @@ class ContentManager constructor(context: Context){
     private val COUNTRY_MAP: MutableMap<String, Country> = HashMap()
     private val COUNTRY_CACHE: MutableMap<String, CountryDetails> = HashMap()
     private val EDUCATION_LIST: MutableList<Education> = ArrayList();
+    private val EXPERIENCE_LIST: MutableList<Experience> = ArrayList();
     init {
         context.resources.getStringArray(R.array.countries_array).withIndex().forEach() {
             val country = Country(it.index.toString(), it.value)
@@ -38,9 +39,23 @@ class ContentManager constructor(context: Context){
                 "Information Technology", "2011-2014"))
     }
 
+    private fun genExperienceList() {
+        EXPERIENCE_LIST.add(Experience("1", "Motorola Mobility", "Oct 2018 - Present",
+                "Multimedia Software Engg", "Chicago"))
+        EXPERIENCE_LIST.add(Experience("2", "TransUnion", "May 2017 - Oct 2018",
+                "Software Engg", "Chicago"))
+        EXPERIENCE_LIST.add(Experience("3", "Oracle", "Aug 2014 - Aug 2016",
+                "Software Engg", "Mumbai"))
+    }
+
     fun getEducationList(): List<Education>  {
         if (EDUCATION_LIST.isEmpty()) genEducationList()
         return ArrayList<Education>(EDUCATION_LIST)
+    }
+
+    fun getExperienceList(): List<Experience> {
+        if (EXPERIENCE_LIST.isEmpty()) genExperienceList()
+        return ArrayList<Experience>(EXPERIENCE_LIST)
     }
 
     companion object {
@@ -56,5 +71,6 @@ class ContentManager constructor(context: Context){
                               val region: String, val subRegion: String)
     data class Education(val id: String, val collName: String, val level: String, val major: String,
                          val gradYear: String)
-
+    data class Experience(val id: String, val compName: String, val dur: String, val title: String,
+                          val location: String)
 }

@@ -1,12 +1,15 @@
 package com.moto.adsouza.countryapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,17 +30,41 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.edu_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle("My Profile");
-        View recyclerView = findViewById(R.id.edu_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+        View eduRecyclerView = findViewById(R.id.edu_list);
+        assert eduRecyclerView != null;
+        setupEducationRecyclerView((RecyclerView) eduRecyclerView);
+
+        View expRecyclerView = findViewById(R.id.exp_list);
+        assert expRecyclerView != null;
+        setupExperienceRecyclerView((RecyclerView) expRecyclerView);
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            // This ID represents the Home or Up button. In the case of this
+            // activity, the Up button is shown. For
+            // more details, see the Navigation pattern on Android Design:
+            //
+            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+            //
+            navigateUpTo(new Intent(this, ItemListActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setupEducationRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new EducationRecyclerViewAdapter(this, mContent.getEducationList()));
     }
 
-    private void setupRecyclerView2(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new ItemListActivity.SimpleItemRecyclerViewAdapter(this, mContent.getCountryList(), false));
+    private void setupExperienceRecyclerView(@NonNull RecyclerView recyclerView) {
+        recyclerView.setAdapter(new ExperienceRecyclerViewAdapter(this, mContent.getExperienceList()));
     }
     @Override
     protected void onResume() {
@@ -98,10 +125,62 @@ public class ProfileActivity extends AppCompatActivity {
 
             ViewHolder(View view) {
                 super(view);
-                mColNameView = (TextView) view.findViewById(R.id.col_title_txt);
-                mDurView = (TextView) view.findViewById(R.id.dur_txt);
-                mDegreeView = (TextView) view.findViewById(R.id.degree_txt);
-                mMajorView = (TextView) view.findViewById(R.id.major_txt);
+                mColNameView = (TextView) view.findViewById(R.id.comp_name_txt);
+                mDurView = (TextView) view.findViewById(R.id.work_dur_txt);
+                mDegreeView = (TextView) view.findViewById(R.id.pos_title_txt);
+                mMajorView = (TextView) view.findViewById(R.id.loc_txt);
+            }
+        }
+    }
+
+    public static class ExperienceRecyclerViewAdapter
+            extends RecyclerView.Adapter<ExperienceRecyclerViewAdapter.ViewHolder> {
+
+        private final AppCompatActivity mParentActivity;
+        private final List<ContentManager.Experience> mValues;
+
+        ExperienceRecyclerViewAdapter(AppCompatActivity parent,
+                                      List<ContentManager.Experience> items) {
+            mValues = items;
+            mParentActivity = parent;
+        }
+
+
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.experience_list_content, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ExperienceRecyclerViewAdapter.ViewHolder holder, int position) {
+            holder.mCompNameView.setText(mValues.get(position).getCompName());
+            holder.mDurView.setText(mValues.get(position).getDur());
+            holder.mPositionView.setText(mValues.get(position).getTitle());
+            holder.mLocView.setText(mValues.get(position).getLocation());
+
+            holder.itemView.setTag(mValues.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView mCompNameView;
+            final TextView mDurView;
+            final TextView mPositionView;
+            final TextView mLocView;
+
+            ViewHolder(View view) {
+                super(view);
+                mCompNameView = (TextView) view.findViewById(R.id.comp_name_txt);
+                mDurView = (TextView) view.findViewById(R.id.work_dur_txt);
+                mPositionView = (TextView) view.findViewById(R.id.pos_title_txt);
+                mLocView = (TextView) view.findViewById(R.id.loc_txt);
             }
         }
     }
