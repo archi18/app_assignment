@@ -30,13 +30,8 @@ import java.util.List;
  * item details side-by-side using two vertical panes.
  */
 public class ItemListActivity extends AppCompatActivity {
-
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
     private ContentManager mContent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,61 +51,40 @@ public class ItemListActivity extends AppCompatActivity {
             }
         });
 
-        if (findViewById(R.id.item_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
-
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, mContent.getCountryList(), mTwoPane));
+        recyclerView.setAdapter(new CountryRecyclerViewAdapter(this, mContent.getCountryList()));
     }
 
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    public static class CountryRecyclerViewAdapter
+            extends RecyclerView.Adapter<CountryRecyclerViewAdapter.ViewHolder> {
 
         private final AppCompatActivity mParentActivity;
         private final List<ContentManager.Country> mValues;
-        private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ContentManager.Country item = (ContentManager.Country) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.getId());
-                    ItemDetailFragment fragment = new ItemDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.item_detail_container, fragment)
-                            .commit();
+                if (Util.isNetworkConnectionAvailable(mParentActivity)) {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, ItemDetailActivity.class);
+                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.getId());
+                    context.startActivity(intent);
                 } else {
-                    if(Util.isNetworkConnectionAvailable(mParentActivity)) {
-                        Context context = view.getContext();
-                        Intent intent = new Intent(context, ItemDetailActivity.class);
-                        intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.getId());
-                        context.startActivity(intent);
-                    } else {
-                        Toast.makeText(mParentActivity, R.string.network_unavailable,
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(mParentActivity, R.string.network_unavailable,
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         };
 
-        SimpleItemRecyclerViewAdapter(AppCompatActivity parent,
-                                      List<ContentManager.Country> items,
-                                      boolean twoPane) {
+        CountryRecyclerViewAdapter(AppCompatActivity parent,
+                                   List<ContentManager.Country> items) {
             mValues = items;
             mParentActivity = parent;
-            mTwoPane = twoPane;
         }
 
         @Override
@@ -141,7 +115,7 @@ public class ItemListActivity extends AppCompatActivity {
             ViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mContentView = (TextView) view.findViewById(R.id.list_country_name);
             }
         }
     }

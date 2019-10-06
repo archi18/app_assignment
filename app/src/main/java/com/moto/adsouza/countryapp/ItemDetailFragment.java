@@ -1,6 +1,7 @@
 package com.moto.adsouza.countryapp;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -23,35 +24,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.moto.adsouza.countryapp.content.ContentManager;
 import com.moto.adsouza.countryapp.worker.LoadCountryDetailsTask;
 
-/**
- * A fragment representing a single Item detail screen.
- * This fragment is either contained in a {@link ItemListActivity}
- * in two-pane mode (on tablets) or a {@link ItemDetailActivity}
- * on handsets.
- */
 public class ItemDetailFragment extends Fragment {
 
     private static final String TAG = ItemDetailFragment.class.getSimpleName();
-    /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
-     */
     public static final String ARG_ITEM_ID = "item_id";
-
-    /**
-     * The dummy content this fragment is presenting.
-     */
     private ContentManager.Country mItem;
-
     private Handler mHandler;
-
     private View mCountryDetailsView;
-
     public static int UPDATE_COUNTRY_DETAILS = 1;
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
+
     public ItemDetailFragment() {
     }
 
@@ -60,9 +41,6 @@ public class ItemDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         startHandler();
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            // Load the dummy content specified by the fragment
-            // arguments. In a real-world scenario, use a Loader
-            // to load content from a content provider.
             mItem = ContentManager.getCountry(getArguments().getString(ARG_ITEM_ID));
         }
     }
@@ -79,8 +57,14 @@ public class ItemDetailFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Updating info", Snackbar.LENGTH_LONG).show();
-                loadCountryInfo();
+                if(Util.isNetworkConnectionAvailable(activity)) {
+                    Snackbar.make(view, "Updating info", Snackbar.LENGTH_SHORT).show();
+                    loadCountryInfo();
+                } else {
+                    Toast.makeText(activity, R.string.network_unavailable,
+                            Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -120,23 +104,34 @@ public class ItemDetailFragment extends Fragment {
     }
 
     private void updateCountyDetail(ContentManager.CountryDetails countryDetails) {
+        if (getActivity() == null)
+            return;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (!isRemoving()) {
-                    ((TextView) mCountryDetailsView.findViewById(R.id.cap_txt_val)).setText(
+                    setText(mCountryDetailsView.findViewById(R.id.contry_name_txt),
+                            countryDetails.getCountry().getName());
+                    setText(mCountryDetailsView.findViewById(R.id.cap_txt_val),
                             countryDetails.getCapital());
-                    ((TextView) mCountryDetailsView.findViewById(R.id.area_txt_val)).setText(
+                    setText(mCountryDetailsView.findViewById(R.id.area_txt_val),
                             countryDetails.getArea());
-                    ((TextView) mCountryDetailsView.findViewById(R.id.pop_txt_val)).setText(
+                    setText(mCountryDetailsView.findViewById(R.id.pop_txt_val),
                             countryDetails.getPopulation());
-                    ((TextView) mCountryDetailsView.findViewById(R.id.reg_txt_val)).setText(
+                    setText(mCountryDetailsView.findViewById(R.id.reg_txt_val),
                             countryDetails.getRegion());
-                    ((TextView) mCountryDetailsView.findViewById(R.id.subreg_txt_val)).setText(
+                    setText(mCountryDetailsView.findViewById(R.id.subreg_txt_val),
                             countryDetails.getSubRegion());
                 }
             }
         });
+    }
+
+    private void setText(TextView textView, String text) {
+        textView.setText(text);
+        if (LoadCountryDetailsTask.CountryInfo.INFO_UNAVAILABLE.equals(text)) {
+            textView.setTextColor(Color.RED);
+        }
     }
 
     @Override
@@ -145,10 +140,6 @@ public class ItemDetailFragment extends Fragment {
 
         mCountryDetailsView = inflater.inflate(R.layout.country_details, container, false);
         loadCountryInfo();
-        // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-            //((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.details);
-        }
 
         return mCountryDetailsView;
     }

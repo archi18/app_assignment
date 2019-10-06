@@ -3,7 +3,6 @@ package com.moto.adsouza.countryapp.content
 import android.content.Context
 import android.os.Handler
 import com.moto.adsouza.countryapp.R
-import java.util.concurrent.atomic.AtomicBoolean
 
 class ContentManager constructor(context: Context){
     private val COUNTRY_LIST: MutableList<Country> = ArrayList();
@@ -13,7 +12,7 @@ class ContentManager constructor(context: Context){
     private val EXPERIENCE_LIST: MutableList<Experience> = ArrayList();
     init {
         context.resources.getStringArray(R.array.countries_array).withIndex().forEach() {
-            val country = Country(it.index.toString(), it.value)
+            val country = Country((it.index + 1).toString(), it.value)
             COUNTRY_LIST.add(country)
             COUNTRY_MAP.put(country.id, country)
         }
@@ -67,7 +66,7 @@ class ContentManager constructor(context: Context){
     }
 
     data class Country(val id: String, val name: String)
-    data class CountryDetails(val country: Country, val capital: String, val population: String, val area: String,
+    data class CountryDetails(val country: Country, val name: String, val capital: String, val population: String, val area: String,
                               val region: String, val subRegion: String)
     data class Education(val id: String, val collName: String, val level: String, val major: String,
                          val gradYear: String)

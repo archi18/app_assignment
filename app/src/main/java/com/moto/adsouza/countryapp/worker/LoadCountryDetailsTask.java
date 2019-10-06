@@ -35,19 +35,23 @@ public class LoadCountryDetailsTask extends AsyncTask<Void, Void, String> {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        // Will contain the raw JSON response as a string.
-        String countryString = null;
+        String countryString;
 
         try {
             String getUrl = String.format(COUNTRY_DETAILS_GET_URL, mCounty.getName());
-            Log.d(TAG, " Archi Getting data for: " + getUrl);
+            Log.d(TAG, "Getting data for: " + getUrl);
             URL url = new URL(getUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
-            int lengthOfFile = urlConnection.getContentLength();
+            int respCode = urlConnection.getResponseCode();
+            Log.d(TAG, "Response code received: " + respCode);
+            if (respCode >= 400) {
+                Log.w(TAG, "Broken link "+ getUrl);
+                return null;
+            }
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 return null;
             }
@@ -55,18 +59,18 @@ public class LoadCountryDetailsTask extends AsyncTask<Void, Void, String> {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
 
             if (buffer.length() == 0) {
                 return null;
             }
             countryString = buffer.toString();
-            Log.d(TAG, "Archi stting found :" + countryString);
+            Log.d(TAG, "return string found :" + countryString);
 
             return countryString;
         } catch (IOException e) {
-            Log.e(TAG, "Archi Error ", e);
+            Log.e(TAG, "Error while getting data ", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -75,18 +79,18 @@ public class LoadCountryDetailsTask extends AsyncTask<Void, Void, String> {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e("PlaceholderFragment", "Error closing stream", e);
+                    Log.e(TAG, "Error closing stream", e);
                 }
             }
         }
 
-        return countryString;
+        return null;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        if (mCounty == null || mCounty.getName() == null) {
+        if (mCounty == null) {
             mHandler.sendMessage(mHandler.obtainMessage(ItemDetailFragment.UPDATE_COUNTRY_DETAILS,
                     new ItemDetailFragment.CountryInfoTask(null,
                             ItemDetailFragment.Status.FAIL)));
@@ -104,10 +108,11 @@ public class LoadCountryDetailsTask extends AsyncTask<Void, Void, String> {
         mHandler.sendMessage(mHandler.obtainMessage(ItemDetailFragment.UPDATE_COUNTRY_DETAILS,
                 new ItemDetailFragment.CountryInfoTask(countryDetails,
                         ItemDetailFragment.Status.SUCCESS)));
-        Log.d(TAG, "Archi : Result ready : " + json);
+        Log.d(TAG, "onPostExecute Result ready : " + json);
     }
 
     private ContentManager.CountryDetails parseCountryDetails(String jsonString) {
+        if (jsonString == null || jsonString.isEmpty()) return null;
         try {
             JSONArray arry = new JSONArray(jsonString);
             JSONObject obj = arry.getJSONObject(0);
@@ -117,9 +122,14 @@ public class LoadCountryDetailsTask extends AsyncTask<Void, Void, String> {
             String area = obj.optString(CountryInfo.AREA_TAG, CountryInfo.INFO_UNAVAILABLE);
             String region = obj.optString(CountryInfo.REGION_TAG, CountryInfo.INFO_UNAVAILABLE);
             String subRegion = obj.optString(CountryInfo.SUBREGION_TAG, CountryInfo.INFO_UNAVAILABLE);
-            Log.d(TAG, "Archi Json Name:" + name + ", capital:" + captial + ", pop:" + pop +
-                    ", area:" +area + ", region:" + region + ", subregion:" + subRegion);
-            return new ContentManager.CountryDetails(mCounty, captial, pop, area, region, subRegion);
+            if(captial.isEmpty()) captial = CountryInfo.INFO_UNAVAILABLE;
+            if(pop.isEmpty()) pop = CountryInfo.INFO_UNAVAILABLE;
+            if(area.isEmpty()) area = CountryInfo.INFO_UNAVAILABLE;
+            if(region.isEmpty()) region = CountryInfo.INFO_UNAVAILABLE;
+            if(subRegion.isEmpty()) subRegion = CountryInfo.INFO_UNAVAILABLE;
+            Log.d(TAG, "Parse json Info { Name:" + name + ", capital:" + captial + ", pop:" + pop +
+                    ", area:" +area + ", region:" + region + ", subregion:" + subRegion +"}");
+            return new ContentManager.CountryDetails(mCounty,name, captial, pop, area, region, subRegion);
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
@@ -129,9 +139,10 @@ public class LoadCountryDetailsTask extends AsyncTask<Void, Void, String> {
     private  ContentManager.CountryDetails createEmptyContry(ContentManager.Country country) {
         return new ContentManager.CountryDetails(country, CountryInfo.INFO_UNAVAILABLE,
                 CountryInfo.INFO_UNAVAILABLE, CountryInfo.INFO_UNAVAILABLE,
-                CountryInfo.INFO_UNAVAILABLE, CountryInfo.INFO_UNAVAILABLE);
+                CountryInfo.INFO_UNAVAILABLE, CountryInfo.INFO_UNAVAILABLE,
+                CountryInfo.INFO_UNAVAILABLE);
     }
-    interface CountryInfo {
+    public interface CountryInfo {
         String NAME_TAG = "name";
         String CAPITAL_TAG = "capital";
         String AREA_TAG = "area";

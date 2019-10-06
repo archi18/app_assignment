@@ -11,4 +11,10 @@
     <string name="profile">Profile</string>
     <string name="education_title">Education</string>
     <string name="experience_title">Experience</string>
+    <string name="country_name">Country Name:</string>
+    <string name="count_det_capital">Capital:</string>
+    <string name="count_det_area">Area:</string>
+    <string name="count_det_population">Population:</string>
+    <string name="count_det_region">Region:</string>
+    <string name="count_det_subregion">Subregion:</string>
 </resources>
